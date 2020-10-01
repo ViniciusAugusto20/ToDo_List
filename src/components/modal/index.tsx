@@ -13,10 +13,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  IconButton,
   Typography,
 } from '@material-ui/core';
-
+import { ToastContainer, toast } from 'react-toastify';
 import Task from '../../models/task';
 
 import './style.scss';
@@ -40,7 +39,7 @@ const Modal = (props: Props) => {
 
   const salvarAtividade = () => {
     const tasksFound = JSON.parse(
-      localStorage.getItem('@MyToDoList/tasks') || '',
+      localStorage.getItem('@MyToDoList/tasks') || '[]',
     );
     if (task?.id) {
       let taskToChange = tasksFound.find(
@@ -48,8 +47,9 @@ const Modal = (props: Props) => {
       );
       if (taskToChange?.id == task?.id) {
         taskToChange.task = taskDescription;
+        let indexTask = tasksFound.indexOf(taskToChange);
         tasksFound.splice(tasksFound.indexOf(taskToChange), 1);
-        tasksFound.push(taskToChange);
+        tasksFound.splice(indexTask, 0, taskToChange);
         handleClose();
         uppdateTasks(true);
       }
@@ -60,21 +60,45 @@ const Modal = (props: Props) => {
         task: taskDescription,
         done: false,
       };
-      tasksFound.push(newTask);
-      handleClose();
-      setTaskDescription('');
+      if (newTask.task === '') {
+        notifyError();
+        uppdateTasks(false);
+      } else {
+        tasksFound.splice(0, 0, newTask);
+        handleClose();
+        setTaskDescription('');
+        uppdateTasks(true);
+        localStorage.setItem('@MyToDoList/tasks', JSON.stringify(tasksFound));
+      }
       uppdateTasks(true);
-      localStorage.setItem('@MyToDoList/tasks', JSON.stringify(tasksFound));
     }
   };
+
+  const notifyError = () => {
+    toast.error('Place a description', {
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  };
+
   return (
     <Box display="block">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+      />
       <Button onClick={handleClickOpen}>
         {icone}
         {!task?.id ? (
           <Typography className={'titleAddButton'}>Add Activity</Typography>
         ) : (
-          <> </>
+          <></>
         )}
       </Button>
       <Dialog
@@ -85,14 +109,10 @@ const Modal = (props: Props) => {
         <DialogTitle>
           {task?.id ? (
             <>
-              {' '}
-              <Typography className={'titleModal'}>
-                Edit Activity
-              </Typography>{' '}
+              <Typography className={'titleModal'}>Edit Activity</Typography>
             </>
           ) : (
             <>
-              {' '}
               <Typography className={'titleModal'}>Add Activity</Typography>
             </>
           )}
@@ -103,7 +123,7 @@ const Modal = (props: Props) => {
               <TableHead>
                 <TableRow>
                   <TableCell className={'tableCellHeadFirst'}>
-                    Descrição
+                    Description
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -140,7 +160,7 @@ const Modal = (props: Props) => {
                 className="saveButton"
                 onClick={salvarAtividade}
               >
-                Salvar
+                Save
               </Button>
             </Table>
           </TableContainer>

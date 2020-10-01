@@ -41,7 +41,8 @@ const ListTasks = () => {
       let tasksFound = localStorage.getItem('@MyToDoList/tasks');
       if (tasksFound) {
         setSavedDataOnStorage(JSON.parse(tasksFound));
-        notifySucesso();
+        setMyTasks(JSON.parse(tasksFound));
+        notifySuccess();
       }
     }
   };
@@ -52,8 +53,9 @@ const ListTasks = () => {
     );
     if (taskToChange?.id == task.id) {
       taskToChange.done = !task.done;
+      let indexTask = tasksFound.indexOf(taskToChange);
       tasksFound.splice(tasksFound.indexOf(taskToChange), 1);
-      tasksFound.push(taskToChange);
+      tasksFound.splice(indexTask, 0, taskToChange);
     }
     localStorage.setItem('@MyToDoList/tasks', JSON.stringify(tasksFound));
     setMyTasks([...tasksFound]);
@@ -70,12 +72,12 @@ const ListTasks = () => {
 
   //Notificações para o usuário
   const notifyInfo = () => {
-    toast.info('Atividade concluída', {
+    toast.info('Activity completed', {
       position: toast.POSITION.TOP_RIGHT,
     });
   };
-  const notifySucesso = () => {
-    toast.success('Atividade salva', {
+  const notifySuccess = () => {
+    toast.success('Activity saved', {
       position: toast.POSITION.TOP_RIGHT,
     });
   };
@@ -103,7 +105,7 @@ const ListTasks = () => {
             <img alt="Logo" className={'imageLogo'} src={logo} />
             <Typography className="textLogo">My ToDo List</Typography>
           </Box>
-          <Box className="containerListing">
+          <Box className="containerListing" display="inline-table">
             <Box className="containerAddItem">
               <ModalItem icone={<AddIcon />} uppdateTasks={uppdateTasks} />
             </Box>
@@ -117,19 +119,19 @@ const ListTasks = () => {
                   <TableHead className={'tableHead'}>
                     <TableRow>
                       <TableCell className={'tableCellHeadFirst'}>
-                        Feito
+                        Done
                       </TableCell>
                       <TableCell className={'tableCellHead'}>
-                        Descrição
+                        Description
                       </TableCell>
-                      <TableCell className={'tableCellHead'}>Editar</TableCell>
+                      <TableCell className={'tableCellHead'}>Edit</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {(5 > 0
                       ? myTasks.slice(page * 5, page * 5 + 5)
                       : myTasks
-                    ).map((task:Task) => (
+                    ).map((task: Task) => (
                       <TableRow key={task.id}>
                         <TableCell align="left">
                           <Checkbox
