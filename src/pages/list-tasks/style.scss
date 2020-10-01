@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+$cor-padrao: #4d024d;
+$font-padrao: 'Open Sans', sans-serif;
+
+.containerPage {
+  text-align: center;
+  align-items: center;
+  .containerLogo {
+    align-items: center;
+    .textLogo {
+      color: $cor-padrao;
+      font-size: 38px;
+      font-weight: 700;
+      font-family: $font-padrao;
+    }
+    .imageLogo {
+      width: 160px;
+      height: 160px;
+    }
+  }
+  .containerListing {
+    .containerAddItem {
+      padding-top: 25px;
+      padding-bottom: 40px;
+      width: 200px;
+      & button {
+        color: white;
+        border-radius: 50px;
+        background-color: $cor-padrao;
+        border: solid 2px $cor-padrao;
+      }
+    }
+    .MuiPaper-root {
+      width: 600px;
+    }
+    .Mui-checked {
+      color: #3cc480 !important;
+    }
+    .TableCell-unDone {
+      padding: 8px;
+      font-weight: 400;
+      font-family: $font-padrao;
+      height: 20px !important;
+    }
+    .TableCell-Done {
+      padding: 8px;
+      font-weight: 400;
+      text-decoration: line-through;
+      font-family: $font-padrao;
+      height: 20px !important;
+    }
+    .tableCellHeadFirst {
+      color: #fff;
+      background-color: $cor-padrao;
+      font-weight: 700 !important;
+    }
+    .tableCellHead {
+      color: #fff;
+      background-color: $cor-padrao;
+      font-weight: 700 !important;
+      text-align: center;
+    }
+  }
+}
